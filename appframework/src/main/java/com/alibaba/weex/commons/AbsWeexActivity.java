@@ -241,7 +241,7 @@ public abstract class AbsWeexActivity extends AppCompatActivity implements IWXRe
   private WxRefreshListener mRefreshListener;
   private String mUrl;// "http://your_current_IP:12580/examples/build/index.js";
   private String mPageName = TAG;
-
+  protected Boolean isLocalUrl = false;
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

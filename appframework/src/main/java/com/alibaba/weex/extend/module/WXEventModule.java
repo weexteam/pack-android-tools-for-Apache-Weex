@@ -17,17 +17,20 @@ public class WXEventModule extends WXModule {
     if (TextUtils.isEmpty(url)) {
       return;
     }
+    Intent intent = new Intent(Intent.ACTION_VIEW);
     String scheme = Uri.parse(url).getScheme();
     StringBuilder builder = new StringBuilder();
-    if (TextUtils.equals("http",scheme) || TextUtils.equals("https",scheme) || TextUtils.equals("file",scheme)) {
-      builder.append(url);
+    if (TextUtils.equals("http", scheme) || TextUtils.equals("https", scheme)) {
+      intent.putExtra("isLocal", false);
+    }else if (TextUtils.equals("file", scheme)) {
+      intent.putExtra("isLocal", true);
     } else {
       builder.append("http:");
-      builder.append(url);
     }
+    builder.append(url);
 
     Uri uri = Uri.parse(builder.toString());
-    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+    intent.setData(uri);
     intent.addCategory(WEEX_CATEGORY);
     mWXSDKInstance.getContext().startActivity(intent);
   }
