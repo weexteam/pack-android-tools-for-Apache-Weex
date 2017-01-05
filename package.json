@@ -1,6 +1,6 @@
 {
   "name": "weexpack-android",
-  "version": "6.2.0-dev",
+  "version": "6.2.1-dev",
   "description": "cordova-android release",
   "bin": {
     "create": "bin/create"
