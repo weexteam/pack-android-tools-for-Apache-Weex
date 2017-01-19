@@ -204,6 +204,7 @@
  */
 package com.alibaba.weex.commons;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -231,7 +232,7 @@ import com.taobao.weex.common.WXRenderStrategy;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbsWeexActivity extends AppCompatActivity implements IWXRenderListener {
+public abstract class AbsWeexActivity extends Activity implements IWXRenderListener {
   private static final String TAG = "AbsWeexActivity";
   protected BroadcastReceiver mBroadcastReceiver;
   protected ViewGroup mContainer;

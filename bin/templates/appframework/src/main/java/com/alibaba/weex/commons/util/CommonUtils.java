@@ -204,11 +204,11 @@
  */
 package com.alibaba.weex.commons.util;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.os.Build;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.lang.reflect.Field;
@@ -222,7 +222,7 @@ public class CommonUtils {
     static {
         isSupportSmartBar = isSupportSmartBar();
     }
-    public static int getDisplayWidth(AppCompatActivity activity){
+    public static int getDisplayWidth(Activity activity){
         int width=0;
         if (activity != null && activity.getWindowManager() != null && activity.getWindowManager().getDefaultDisplay() != null) {
             Point point=new Point();
@@ -232,7 +232,7 @@ public class CommonUtils {
         return width;
     }
 
-    public static int getDisplayHeight(AppCompatActivity activity) {
+    public static int getDisplayHeight(Activity activity) {
         int height = 0;
         if (activity != null && activity.getWindowManager() != null && activity.getWindowManager().getDefaultDisplay() != null) {
             Point point=new Point();
@@ -248,8 +248,8 @@ public class CommonUtils {
             height -= smartBarHeight;
         }
 
-        if (activity != null && activity.getSupportActionBar() != null) {
-          int actionbar= activity.getSupportActionBar().getHeight();
+        if (activity != null && activity.getActionBar() != null) {
+          int actionbar= activity.getActionBar().getHeight();
           if(actionbar==0){
             TypedArray actionbarSizeTypedArray=activity.obtainStyledAttributes(new int[]{android.R.attr.actionBarSize});
             actionbar= (int) actionbarSizeTypedArray.getDimension(0,0);
@@ -267,7 +267,7 @@ public class CommonUtils {
         return height;
     }
 
-    private static int getStatusBarHeight(AppCompatActivity activity) {
+    private static int getStatusBarHeight(Activity activity) {
         Class<?> c;
         Object obj;
         Field field;
@@ -285,8 +285,8 @@ public class CommonUtils {
         return statusBarHeight;
     }
 
-    private static int getSmartBarHeight(AppCompatActivity activity) {
-        ActionBar actionbar = activity.getSupportActionBar();
+    private static int getSmartBarHeight(Activity activity) {
+        ActionBar actionbar = activity.getActionBar();
         if (actionbar != null)
             try {
                 Class c = Class.forName("com.android.internal.R$dimen");

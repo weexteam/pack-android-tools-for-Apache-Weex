@@ -5,10 +5,8 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,7 +29,6 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.ui.component.NestedContainer;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
 
-import java.io.File;
 import java.util.HashMap;
 
 
@@ -133,14 +130,6 @@ public class WXPageActivity extends AbsWeexActivity implements
   }
 
   private void initUIAndData() {
-
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
-
-    ActionBar actionBar = getSupportActionBar();
-    actionBar.setDisplayHomeAsUpEnabled(true);
-    actionBar.setTitle(mUri.toString().substring(mUri.toString().lastIndexOf(File.separator) + 1));
-
     mContainer = (ViewGroup) findViewById(R.id.container);
     mProgressBar = (ProgressBar) findViewById(R.id.progress);
     mTipView = (TextView) findViewById(R.id.index_tip);
@@ -203,9 +192,6 @@ public class WXPageActivity extends AbsWeexActivity implements
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-//    if (!TextUtils.equals("file", mUri.getScheme())) {
-//      getMenuInflater().inflate(R.menu.refresh, menu);
-//    }
     getMenuInflater().inflate(isLocalPage() ? R.menu.main_scan : R.menu.main, menu);
     return super.onCreateOptionsMenu(menu);
   }
