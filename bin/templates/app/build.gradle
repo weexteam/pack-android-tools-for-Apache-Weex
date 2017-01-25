@@ -26,21 +26,28 @@ android {
         }
     }
     signingConfigs {
-        release {
-            storeFile file("tools/weex.jks")
-            storePassword "123456"
-            keyAlias "weex"
-            keyPassword "123456"
+//        release {
+//            storeFile file("tools/weex.jks")
+//            storePassword "123456"
+//            keyAlias "weex"
+//            keyPassword "123456"
+//        }
+        debug {
+            storeFile file("tools/debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
         }
     }
     buildTypes {
-//        release {
+        release {
 //            signingConfig signingConfigs.release
 //            minifyEnabled false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//        }
+        }
         debug {
             testCoverageEnabled true
+            signingConfig signingConfigs.debug
         }
     }
     sourceSets {
@@ -78,7 +85,6 @@ dependencies {
     compile 'com.taobao.android:weex_sdk:0.9.4'
     compile project(':appframework')
     compile project(':weexplugin')
-//    compile project(':gcanvas_weex_plugin')
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.okhttp:okhttp-ws:2.3.0'
     compile 'com.squareup.okio:okio:1.0.1'
