@@ -9,4 +9,6 @@
         launched local service\n2.Make sure you modify "your_current_ip" to your local IP in
         "WXMainActivity"
     </string>
+    <string name="scan_qr_code">扫码</string>
+    <string name="page_refresh">刷新</string>
 </resources>
