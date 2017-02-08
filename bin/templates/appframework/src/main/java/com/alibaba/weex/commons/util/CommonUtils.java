@@ -206,18 +206,24 @@ package com.alibaba.weex.commons.util;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.os.Build;
 import android.util.Log;
+import android.view.ViewConfiguration;
+
+import com.taobao.weex.WXEnvironment;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class CommonUtils {
     private static final String TAG = "WXTBUtil";
 
     private static boolean isSupportSmartBar = false;
+    private static Boolean hasHardwareMenuKey = null;
 
     static {
         isSupportSmartBar = isSupportSmartBar();
@@ -318,5 +324,36 @@ public class CommonUtils {
       if(object == null){
         throw e;
       }
+    }
+
+    public static boolean hasHardwareMenuKey() {
+        if (hasHardwareMenuKey == null) {
+            ViewConfiguration vc = ViewConfiguration.get(WXEnvironment.getApplication());
+            if (Build.VERSION.SDK_INT >= 14) {
+                // boolean vc.hasPermanentMenuKey();
+                try {
+                    Method m = vc.getClass().getMethod("hasPermanentMenuKey",
+                        new Class<?>[] {});
+                    try {
+                        hasHardwareMenuKey = (Boolean) m.invoke(vc, new Object[] {});
+                    } catch (IllegalArgumentException e) {
+                        hasHardwareMenuKey = false;
+                    } catch (IllegalAccessException e) {
+                        hasHardwareMenuKey = false;
+                    } catch (InvocationTargetException e) {
+                        hasHardwareMenuKey = false;
+                    }
+                } catch (NoSuchMethodException e) {
+                    hasHardwareMenuKey = false;
+                }
+            }
+            if (hasHardwareMenuKey == null) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+                    hasHardwareMenuKey = true;
+                else
+                    hasHardwareMenuKey = false;
+            }
+        }
+        return hasHardwareMenuKey;
     }
 }

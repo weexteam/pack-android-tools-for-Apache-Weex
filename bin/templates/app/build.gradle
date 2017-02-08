@@ -85,6 +85,7 @@ dependencies {
     compile 'com.taobao.android:weex_sdk:0.9.4'
     compile project(':appframework')
     compile project(':weexplugin')
+    compile 'com.google.code.findbugs:jsr305:2.0.1'
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.okhttp:okhttp-ws:2.3.0'
     compile 'com.squareup.okio:okio:1.0.1'

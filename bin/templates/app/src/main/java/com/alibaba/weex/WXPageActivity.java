@@ -1,24 +1,31 @@
 package com.alibaba.weex;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.weex.commons.AbsWeexActivity;
+import com.alibaba.weex.commons.util.DevOptionHandler;
+import com.alibaba.weex.commons.util.ShakeDetector;
+import com.alibaba.weex.commons.util.CommonUtils;
 import com.alibaba.weex.constants.Constants;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -30,6 +37,7 @@ import com.taobao.weex.ui.component.NestedContainer;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 
 public class WXPageActivity extends AbsWeexActivity implements
@@ -40,6 +48,11 @@ public class WXPageActivity extends AbsWeexActivity implements
   private ProgressBar mProgressBar;
   private TextView mTipView;
   private HashMap mConfigMap = new HashMap<String, Object>();
+  private AlertDialog mDevOptionsDialog;
+  private boolean mIsShakeDetectorStarted = false;
+  private boolean mIsDevSupportEnabled = WXEnvironment.isApkDebugable();
+  private final LinkedHashMap<String, DevOptionHandler> mCustomDevOptions = new LinkedHashMap<>();
+  private ShakeDetector mShakeDetector = null;
 
   public static Activity getCurrentWxPageActivity() {
     return wxPageActivityInstance;
@@ -59,6 +72,16 @@ public class WXPageActivity extends AbsWeexActivity implements
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_wxpage);
     setCurrentWxPageActivity(this);
+    if (mIsDevSupportEnabled && !CommonUtils.hasHardwareMenuKey()) {
+      mShakeDetector = new ShakeDetector(new ShakeDetector.ShakeListener(){
+
+        @Override
+        public void onShake() {
+          showDevOptionsDialog();
+        }
+      });
+    }
+
 
     // mUri = Uri.parse(Constants.TEST_BUNDLE_URL + Constants.WEEX_SAMPLES_KEY);
     Uri uri = getIntent().getData();
@@ -109,6 +132,24 @@ public class WXPageActivity extends AbsWeexActivity implements
     }
 
     loadUrl(getUrl(mUri));
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    if (!mIsShakeDetectorStarted) {
+      mShakeDetector.start((SensorManager) getApplicationContext().getSystemService(Context.SENSOR_SERVICE));
+      mIsShakeDetectorStarted = true;
+    }
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (mIsShakeDetectorStarted) {
+      mShakeDetector.stop();
+      mIsShakeDetectorStarted = false;
+    }
   }
 
   private String getTestUrl(String url) {
@@ -268,5 +309,77 @@ public class WXPageActivity extends AbsWeexActivity implements
         startActivity(intent);
       }
     }
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    if (mShakeDetector != null) {
+      mShakeDetector.stop();
+    }
+  }
+
+  public void showDevOptionsDialog() {
+    if (mDevOptionsDialog != null || !mIsDevSupportEnabled || ActivityManager.isUserAMonkey()) {
+      return;
+    }
+    LinkedHashMap<String, DevOptionHandler> options = new LinkedHashMap<>();
+    /* register standard options */
+    options.put(
+        getString(R.string.scan_qr_code), new DevOptionHandler() {
+          @Override
+          public void onOptionSelected() {
+            IntentIntegrator integrator = new IntentIntegrator(WXPageActivity.this);
+            integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
+            integrator.setPrompt("Scan a barcode");
+            //integrator.setCameraId(0);  // Use a specific camera of the device
+            integrator.setBeepEnabled(true);
+            integrator.setOrientationLocked(false);
+            integrator.setBarcodeImageEnabled(true);
+            integrator.setPrompt(getString(R.string.capture_qrcode_prompt));
+            integrator.initiateScan();
+          }
+        });
+    options.put(
+        getString(R.string.page_refresh), new DevOptionHandler() {
+          @Override
+          public void onOptionSelected() {
+            createWeexInstance();
+            renderPage();
+          }
+        });
+
+    if (mCustomDevOptions.size() > 0) {
+      options.putAll(mCustomDevOptions);
+    }
+
+    final DevOptionHandler[] optionHandlers = options.values().toArray(new DevOptionHandler[0]);
+
+    mDevOptionsDialog =
+        new AlertDialog.Builder(WXPageActivity.this)
+            .setItems(
+                options.keySet().toArray(new String[0]),
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                    optionHandlers[which].onOptionSelected();
+                    mDevOptionsDialog = null;
+                  }
+                })
+            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+              @Override
+              public void onCancel(DialogInterface dialog) {
+                mDevOptionsDialog = null;
+              }
+            })
+            .create();
+    mDevOptionsDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+    mDevOptionsDialog.show();
+  }
+
+  public void addCustomDevOption(
+      String optionName,
+      DevOptionHandler optionHandler) {
+    mCustomDevOptions.put(optionName, optionHandler);
   }
 }
