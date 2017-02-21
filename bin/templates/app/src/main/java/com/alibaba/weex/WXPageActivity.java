@@ -137,7 +137,7 @@ public class WXPageActivity extends AbsWeexActivity implements
   @Override
   public void onResume() {
     super.onResume();
-    if (!mIsShakeDetectorStarted) {
+    if (!mIsShakeDetectorStarted && mShakeDetector != null) {
       mShakeDetector.start((SensorManager) getApplicationContext().getSystemService(Context.SENSOR_SERVICE));
       mIsShakeDetectorStarted = true;
     }
@@ -146,7 +146,7 @@ public class WXPageActivity extends AbsWeexActivity implements
   @Override
   public void onPause() {
     super.onPause();
-    if (mIsShakeDetectorStarted) {
+    if (mIsShakeDetectorStarted && mShakeDetector != null) {
       mShakeDetector.stop();
       mIsShakeDetectorStarted = false;
     }
