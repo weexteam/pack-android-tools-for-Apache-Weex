@@ -35,7 +35,6 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.ui.component.NestedContainer;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 
@@ -45,12 +44,11 @@ public class WXPageActivity extends AbsWeexActivity implements
   private static final String TAG = "WXPageActivity";
   private ProgressBar mProgressBar;
   private TextView mTipView;
-  private HashMap mConfigMap = new HashMap<String, Object>();
   private AlertDialog mDevOptionsDialog;
   private boolean mIsShakeDetectorStarted = false;
   private boolean mIsDevSupportEnabled = WXEnvironment.isApkDebugable();
   private final LinkedHashMap<String, DevOptionHandler> mCustomDevOptions = new LinkedHashMap<>();
-  private ShakeDetector mShakeDetector = null;
+  private ShakeDetector mShakeDetector;
 
   @Override
   public void onCreateNestInstance(WXSDKInstance instance, NestedContainer container) {
@@ -61,6 +59,10 @@ public class WXPageActivity extends AbsWeexActivity implements
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_wxpage);
+    mContainer = (ViewGroup) findViewById(R.id.container);
+    mProgressBar = (ProgressBar) findViewById(R.id.progress);
+    mTipView = (TextView) findViewById(R.id.index_tip);
+
     if (mIsDevSupportEnabled && !CommonUtils.hasHardwareMenuKey()) {
       mShakeDetector = new ShakeDetector(new ShakeDetector.ShakeListener() {
 
@@ -71,14 +73,8 @@ public class WXPageActivity extends AbsWeexActivity implements
       });
     }
 
-
-    // mUri = Uri.parse(Constants.TEST_BUNDLE_URL + Constants.WEEX_SAMPLES_KEY);
     Uri uri = getIntent().getData();
     Bundle bundle = getIntent().getExtras();
-
-    if (uri == null && bundle == null) {
-      mUri = Uri.parse(getTestUrl(Constants.TEST_BUNDLE_URL));
-    }
 
     if (uri != null) {
       mUri = uri;
@@ -86,24 +82,9 @@ public class WXPageActivity extends AbsWeexActivity implements
 
     if (bundle != null) {
       String bundleUrl = bundle.getString(Constants.PARAM_BUNDLE_URL);
-      if (bundleUrl != null) {
-        mUri = Uri.parse(getTestUrl(bundleUrl));
-        mConfigMap.put(Constants.PARAM_BUNDLE_URL, mUri.toString());
+      if (!TextUtils.isEmpty(bundleUrl)) {
+        mUri = Uri.parse(bundleUrl);
       }
-    }
-
-    if (uri == null && bundle == null) {
-      mUri = Uri.parse(getTestUrl(Constants.TEST_BUNDLE_URL));
-    }
-    if (bundle != null) {
-      String bundleUrl = bundle.getString(Constants.PARAM_BUNDLE_URL);
-      if (bundleUrl != null) {
-        mConfigMap.put(Constants.PARAM_BUNDLE_URL, getTestUrl(bundleUrl));
-        mUri = Uri.parse(getTestUrl(bundleUrl));
-      }
-    } else {
-      mConfigMap.put(Constants.PARAM_BUNDLE_URL, getTestUrl(mUri.toString()));
-      // mUri = Uri.parse(mUri.toString() + Constants.WEEX_SAMPLES_KEY)
     }
 
     if (mUri == null) {
@@ -112,8 +93,7 @@ public class WXPageActivity extends AbsWeexActivity implements
       return;
     }
 
-    Log.e("TestScript_Guide mUri==", mUri.toString());
-    initUIAndData();
+
     if (!WXSoInstallMgrSdk.isCPUSupport()) {
       mProgressBar.setVisibility(View.INVISIBLE);
       mTipView.setText(R.string.cpu_not_support_tip);
@@ -141,10 +121,6 @@ public class WXPageActivity extends AbsWeexActivity implements
     }
   }
 
-  private String getTestUrl(String url) {
-    return url + Constants.WEEX_SAMPLES_KEY;
-  }
-
   private String getUrl(Uri uri) {
     String url = uri.toString();
     String scheme = uri.getScheme();
@@ -157,13 +133,6 @@ public class WXPageActivity extends AbsWeexActivity implements
       }
     }
     return url;
-  }
-
-  private void initUIAndData() {
-    mContainer = (ViewGroup) findViewById(R.id.container);
-    mProgressBar = (ProgressBar) findViewById(R.id.progress);
-    mTipView = (TextView) findViewById(R.id.index_tip);
-    isLocalUrl = getIntent().getBooleanExtra("isLocal", false);
   }
 
   protected void preRenderPage() {
@@ -196,28 +165,6 @@ public class WXPageActivity extends AbsWeexActivity implements
     } else {
       mTipView.setText("render error:" + errCode);
     }
-//    if (!TextUtils.isEmpty(errCode) && errCode.contains("|")) {
-//      String[] errCodeList = errCode.split("\\|");
-//      String code = errCodeList[1];
-//      String codeType = errCode.substring(0, errCode.indexOf("|"));
-//
-//      if (TextUtils.equals("1", codeType)) {
-//        String errMsg = "codeType:" + codeType + "\n" + " errCode:" + code + "\n" + " ErrorInfo:" + msg;
-//        degradeAlert(errMsg);
-//        return;
-//      } else {
-//        Toast.makeText(getApplicationContext(), "errCode:" + errCode + " Render ERROR:" + msg, Toast.LENGTH_SHORT).show();
-//      }
-//    }
-  }
-
-  private void degradeAlert(String errMsg) {
-    new AlertDialog.Builder(this)
-        .setTitle("Downgrade success")
-        .setMessage(errMsg)
-        .setPositiveButton("OK", null)
-        .show();
-
   }
 
   @Override
@@ -243,7 +190,6 @@ public class WXPageActivity extends AbsWeexActivity implements
         integrator.setBarcodeImageEnabled(true);
         integrator.setPrompt(getString(R.string.capture_qrcode_prompt));
         integrator.initiateScan();
-        //scanQrCode();
         break;
       case android.R.id.home:
         finish();
@@ -291,8 +237,7 @@ public class WXPageActivity extends AbsWeexActivity implements
         WXSDKEngine.switchDebugModel(true, debug_url);
         finish();
       } else {
-        Toast.makeText(this, code, Toast.LENGTH_SHORT)
-            .show();
+        Toast.makeText(this, code, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(Constants.ACTION_OPEN_URL);
         intent.setPackage(getPackageName());
         intent.setData(Uri.parse(code));
