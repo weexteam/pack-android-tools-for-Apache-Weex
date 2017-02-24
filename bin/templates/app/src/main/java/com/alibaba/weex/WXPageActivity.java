@@ -1,6 +1,5 @@
 package com.alibaba.weex;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -23,9 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.weex.commons.AbsWeexActivity;
+import com.alibaba.weex.commons.util.CommonUtils;
 import com.alibaba.weex.commons.util.DevOptionHandler;
 import com.alibaba.weex.commons.util.ShakeDetector;
-import com.alibaba.weex.commons.util.CommonUtils;
 import com.alibaba.weex.constants.Constants;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -44,7 +43,6 @@ public class WXPageActivity extends AbsWeexActivity implements
     WXSDKInstance.NestedInstanceInterceptor {
 
   private static final String TAG = "WXPageActivity";
-  public static Activity wxPageActivityInstance;
   private ProgressBar mProgressBar;
   private TextView mTipView;
   private HashMap mConfigMap = new HashMap<String, Object>();
@@ -53,14 +51,6 @@ public class WXPageActivity extends AbsWeexActivity implements
   private boolean mIsDevSupportEnabled = WXEnvironment.isApkDebugable();
   private final LinkedHashMap<String, DevOptionHandler> mCustomDevOptions = new LinkedHashMap<>();
   private ShakeDetector mShakeDetector = null;
-
-  public static Activity getCurrentWxPageActivity() {
-    return wxPageActivityInstance;
-  }
-
-  public static void setCurrentWxPageActivity(Activity activity) {
-    wxPageActivityInstance = activity;
-  }
 
   @Override
   public void onCreateNestInstance(WXSDKInstance instance, NestedContainer container) {
@@ -71,9 +61,8 @@ public class WXPageActivity extends AbsWeexActivity implements
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_wxpage);
-    setCurrentWxPageActivity(this);
     if (mIsDevSupportEnabled && !CommonUtils.hasHardwareMenuKey()) {
-      mShakeDetector = new ShakeDetector(new ShakeDetector.ShakeListener(){
+      mShakeDetector = new ShakeDetector(new ShakeDetector.ShakeListener() {
 
         @Override
         public void onShake() {
@@ -268,8 +257,8 @@ public class WXPageActivity extends AbsWeexActivity implements
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-    if(result != null) {
-      if(result.getContents() == null) {
+    if (result != null) {
+      if (result.getContents() == null) {
         Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
       } else {
         handleDecodeInternally(result.getContents());
@@ -278,6 +267,7 @@ public class WXPageActivity extends AbsWeexActivity implements
       super.onActivityResult(requestCode, resultCode, data);
     }
   }
+
   // Put up our own UI for how to handle the decoded contents.
   private void handleDecodeInternally(String code) {
 
@@ -295,7 +285,7 @@ public class WXPageActivity extends AbsWeexActivity implements
         WXSDKEngine.reload();
         Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
         return;
-      }else if (code.contains("_wx_debug")) {
+      } else if (code.contains("_wx_debug")) {
         uri = Uri.parse(code);
         String debug_url = uri.getQueryParameter("_wx_debug");
         WXSDKEngine.switchDebugModel(true, debug_url);

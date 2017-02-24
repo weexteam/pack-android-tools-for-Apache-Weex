@@ -37,31 +37,25 @@ public class SplashActivity extends AppCompatActivity {
 
       @Override
       public void onAnimationEnd(Animation animation) {
-        String url;
-        if (AppConfig.isLaunchLocally()) {
-          url = AppConfig.getLocalUrl();
-        } else {
-          url = AppConfig.getLaunchUrl();
-        }
-        if (TextUtils.isEmpty(url)) {
-          return;
-        }
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        String scheme = Uri.parse(url).getScheme();
-        StringBuilder builder = new StringBuilder();
-        if (TextUtils.equals("file", scheme)) {
-          intent.putExtra("isLocal", true);
-        } else if (!TextUtils.equals("http", scheme) && !TextUtils.equals("https", scheme)) {
-          builder.append("http:");
-        }
-        builder.append(url);
+        String url = AppConfig.getLaunchUrl();
+        if (!TextUtils.isEmpty(url)) {
+          Intent intent = new Intent(Intent.ACTION_VIEW);
+          String scheme = Uri.parse(url).getScheme();
+          StringBuilder builder = new StringBuilder();
+          if (TextUtils.equals("file", scheme)) {
+            intent.putExtra("isLocal", true);
+          } else if (!TextUtils.equals("http", scheme) && !TextUtils.equals("https", scheme)) {
+            builder.append("http:");
+          }
+          builder.append(url);
 
-        Uri uri = Uri.parse(builder.toString());
-        intent.setData(uri);
-        intent.addCategory("com.taobao.android.intent.category.WEEX");
-        intent.setPackage(getPackageName());
-        startActivity(intent);
-        finish();
+          Uri uri = Uri.parse(builder.toString());
+          intent.setData(uri);
+          intent.addCategory("com.taobao.android.intent.category.WEEX");
+          intent.setPackage(getPackageName());
+          startActivity(intent);
+          finish();
+        }
       }
 
       @Override

@@ -27,20 +27,14 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class AppConfigXmlParser {
   private static String TAG = "AppConfigXmlParser";
 
-  private String launchUrl = "file:///android_asset/www/index.html";
   private AppPreferences prefs = new AppPreferences();
+
   public AppPreferences getPreferences() {
     return prefs;
-  }
-
-  public String getLaunchUrl() {
-    return launchUrl;
   }
 
   public synchronized void parse(Context action) {
@@ -51,18 +45,12 @@ public class AppConfigXmlParser {
       // If we couldn't find config.xml there, we'll look in the namespace from AndroidManifest.xml
       id = action.getResources().getIdentifier("app_config", "xml", action.getPackageName());
       if (id == 0) {
-        Log.e(TAG, "res/xml/config.xml is missing!");
+        Log.e(TAG, "res/xml/app_config.xml is missing!");
         return;
       }
     }
     parse(action.getResources().getXml(id));
   }
-
-  boolean insideFeature = false;
-  String service = "", pluginClass = "", paramType = "";
-  boolean onload = false;
-  String category = "module";
-  String api = "";
 
   public void parse(XmlPullParser xml) {
     int eventType = -1;
@@ -83,39 +71,16 @@ public class AppConfigXmlParser {
     }
   }
 
-  public void handleStartTag(XmlPullParser xml) {
+  private void handleStartTag(XmlPullParser xml) {
     String strNode = xml.getName();
-    if (strNode.equals("feature")) {
-      //Check for supported feature sets  aka. plugins (Accelerometer, Geolocation, etc)
-      //Set the bit for reading params
-      insideFeature = true;
-      service = xml.getAttributeValue(null, "name");
-    } else if (strNode.equals("preference")) {
+    if (strNode.equals("preference")) {
       String name = xml.getAttributeValue(null, "name").toLowerCase(Locale.ENGLISH);
       String value = xml.getAttributeValue(null, "value");
       prefs.set(name, value);
-    } else if (strNode.equals("content")) {
-      String src = xml.getAttributeValue(null, "src");
-      if (src != null) {
-        setStartUrl(src);
-      }
     }
   }
 
-  public void handleEndTag(XmlPullParser xml) {
+  private void handleEndTag(XmlPullParser xml) {
 
-  }
-
-  private void setStartUrl(String src) {
-    Pattern schemeRegex = Pattern.compile("^[a-z-]+://");
-    Matcher matcher = schemeRegex.matcher(src);
-    if (matcher.find()) {
-      launchUrl = src;
-    } else {
-      if (src.charAt(0) == '/') {
-        src = src.substring(1);
-      }
-      launchUrl = "file:///android_asset/www/" + src;
-    }
   }
 }
