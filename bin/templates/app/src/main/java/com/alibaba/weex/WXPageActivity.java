@@ -201,7 +201,7 @@ public class WXPageActivity extends AbsWeexActivity implements
   }
 
   @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
     IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
     if (result != null) {
       if (result.getContents() == null) {
@@ -209,9 +209,8 @@ public class WXPageActivity extends AbsWeexActivity implements
       } else {
         handleDecodeInternally(result.getContents());
       }
-    } else {
-      super.onActivityResult(requestCode, resultCode, data);
     }
+    super.onActivityResult(requestCode, resultCode, data);
   }
 
   // Put up our own UI for how to handle the decoded contents.
