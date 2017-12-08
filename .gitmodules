@@ -1,3 +1,0 @@
-[submodule "bin/templates/weexplugin"]
-	path = bin/templates/weexplugin
-	url = https://github.com/weexteam/weexplugin-android.git
