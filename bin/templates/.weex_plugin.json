@@ -1,0 +1,9 @@
+[
+  {
+    "dependency" : "com.moxun:flowlayoutlib:1.0.0",
+    "configuration" : "compile"
+  },
+  {
+    "configuration" : "compile"
+  }
+]

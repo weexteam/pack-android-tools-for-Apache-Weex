@@ -1,3 +1,2 @@
 include ':app'
-include ':weexplugin'
 include ":appframework"

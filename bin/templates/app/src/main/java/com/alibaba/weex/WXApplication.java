@@ -5,7 +5,7 @@ import android.app.Application;
 import com.alibaba.weex.commons.adapter.ImageAdapter;
 import com.alibaba.weex.commons.util.AppConfig;
 import com.alibaba.weex.extend.module.WXEventModule;
-import com.alibaba.weex.pluginmanager.PluginManager;
+import com.alibaba.weex.plugin.loader.WeexPluginContainer;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXEnvironment;
@@ -33,7 +33,7 @@ public class WXApplication extends Application {
     }
     Fresco.initialize(this);
     AppConfig.init(this);
-    PluginManager.init(this);
+    WeexPluginContainer.loadAll(this);
   }
 
   /**
