@@ -95,8 +95,8 @@ dependencies {
     compile 'com.taobao.android:weex_inspector:0.10.0.5'
     compile 'com.journeyapps:zxing-android-embedded:3.4.0'
     // PLUGIN GRADLE EXTENSIONS START
-    compile 'com.taobao.android:weexplugin-loader:1.1-SNAPSHOT'
-    compile 'com.taobao.android:weexplugin-processor:1.1-SNAPSHOT'
-    compile 'com.taobao.android:weexplugin-annotation:1.1-SNAPSHOT'
+    compile 'com.taobao.android:weexplugin-loader:1.2'
+    compile 'com.taobao.android:weexplugin-processor:1.2'
+    compile 'com.taobao.android:weexplugin-annotation:1.2'
     // PLUGIN GRADLE EXTENSIONS END
 }
