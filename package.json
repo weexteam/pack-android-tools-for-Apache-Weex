@@ -1,6 +1,6 @@
 {
   "name": "weexpack-android",
-  "version": "6.3.9",
+  "version": "6.3.15",
   "description": "weexpack-android release",
   "bin": {
     "create": "bin/create"
