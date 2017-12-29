@@ -1,10 +1,10 @@
-package com.alibaba.weex.extend;
+package com.weex.app.extend;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.alibaba.weex.WXPageActivity;
+import com.weex.app.WXPageActivity;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.WXModule;
 

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.alibaba.weex.extend;
+package com.weex.app.extend;
 
 import android.net.Uri;
 import android.text.TextUtils;

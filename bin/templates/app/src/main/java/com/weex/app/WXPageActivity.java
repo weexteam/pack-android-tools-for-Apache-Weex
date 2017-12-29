@@ -1,4 +1,4 @@
-package com.alibaba.weex;
+package com.weex.app;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -15,9 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.weex.hotreload.HotReloadManager;
-import com.alibaba.weex.util.AppConfig;
-import com.alibaba.weex.util.Constants;
+import com.weex.app.hotreload.HotReloadManager;
+import com.weex.app.util.AppConfig;
+import com.weex.app.util.Constants;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.taobao.weex.WXEnvironment;

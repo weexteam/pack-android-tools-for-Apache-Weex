@@ -1,11 +1,11 @@
-package com.alibaba.weex;
+package com.weex.app;
 
 import android.app.Application;
 
-import com.alibaba.weex.extend.ImageAdapter;
-import com.alibaba.weex.extend.WXEventModule;
+import com.weex.app.extend.ImageAdapter;
+import com.weex.app.extend.WXEventModule;
 import com.alibaba.weex.plugin.loader.WeexPluginContainer;
-import com.alibaba.weex.util.AppConfig;
+import com.weex.app.util.AppConfig;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;

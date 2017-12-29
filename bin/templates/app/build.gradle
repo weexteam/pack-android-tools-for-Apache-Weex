@@ -9,9 +9,9 @@ android {
         applicationId "com.weex.app"
         minSdkVersion project.appMinSdkVersion
         targetSdkVersion project.targetSdkVersion
-        versionCode 13
-        versionName "0.5.2.5"
-        ndk{
+        versionCode 1
+        versionName "1.0.0"
+        ndk {
             abiFilters "x86"
             abiFilters "armeabi"
         }
@@ -20,7 +20,7 @@ android {
         variant.outputs.each { output ->
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.equals('app-debug.apk')) {
-                def fileName = outputFile.name.replace("app-debug.apk", "playground.apk")
+                def fileName = outputFile.name.replace("app-debug.apk", "weex-app.apk")
                 output.outputFile = new File(outputFile.parent, fileName)
             }
         }

@@ -201,7 +201,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.weex;
+package com.weex.app;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -220,7 +220,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.alibaba.weex.util.CommonUtils;
+import com.weex.app.util.CommonUtils;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;

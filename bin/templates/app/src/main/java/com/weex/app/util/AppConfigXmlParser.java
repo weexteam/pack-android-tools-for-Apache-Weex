@@ -17,7 +17,7 @@
        under the License.
 */
 
-package com.alibaba.weex.util;
+package com.weex.app.util;
 
 import android.content.Context;
 import android.util.Log;

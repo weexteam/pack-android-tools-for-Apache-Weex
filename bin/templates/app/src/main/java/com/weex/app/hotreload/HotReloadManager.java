@@ -1,4 +1,4 @@
-package com.alibaba.weex.hotreload;
+package com.weex.app.hotreload;
 
 import android.text.TextUtils;
 

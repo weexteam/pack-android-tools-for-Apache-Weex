@@ -1,4 +1,4 @@
-package com.alibaba.weex.util;
+package com.weex.app.util;
 
 public class Constants {
 
