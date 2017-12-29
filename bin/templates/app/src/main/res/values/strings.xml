@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WEEX</string>
+    <string name="app_name">WEEX APP</string>
     <string name="dummy_content" translatable="false">WEEX\nPLAYGROUND</string>
     <string name="capture_qrcode_prompt" translatable="false">请将条码置于取景框内扫描</string>
     <string name="cpu_not_support_tip" translatable="false">Sorry, your current device is x86 architecture.\n We only

@@ -2,16 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.taobao.android.weex.plugin.gradle'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.alibaba.weex"
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 5
+        applicationId "com.weex.app"
+        minSdkVersion project.appMinSdkVersion
+        targetSdkVersion project.targetSdkVersion
+        versionCode 13
         versionName "0.5.2.5"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk{
             abiFilters "x86"
             abiFilters "armeabi"
@@ -27,12 +26,6 @@ android {
         }
     }
     signingConfigs {
-//        release {
-//            storeFile file("tools/weex.jks")
-//            storePassword "123456"
-//            keyAlias "weex"
-//            keyPassword "123456"
-//        }
         debug {
             storeFile file("tools/debug.keystore")
             storePassword "android"
@@ -41,13 +34,7 @@ android {
         }
     }
     buildTypes {
-        release {
-//            signingConfig signingConfigs.release
-//            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
         debug {
-            testCoverageEnabled true
             signingConfig signingConfigs.debug
         }
     }
@@ -65,9 +52,6 @@ android {
     packagingOptions {
         exclude 'LICENSE.txt'
     }
-    testOptions {
-        reportDir = "$project.buildDir/test/report"
-    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -78,20 +62,17 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile 'junit:junit:4.12'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
-    androidTestCompile 'com.android.support.test:runner:0.5'
     compile 'com.taobao.android:weex_sdk:0.16.0'
-    compile project(':appframework')
     compile 'com.google.code.findbugs:jsr305:2.0.1'
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.okhttp:okhttp-ws:2.3.0'
     compile 'com.squareup.okio:okio:1.0.1'
-    compile 'com.alibaba:fastjson:1.1.46.android'
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.android.support:support-annotations:23.1.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile "com.alibaba:fastjson:${project.fastjsonLibVersion}"
+    compile "com.android.support:support-v4:${project.supportLibVersion}"
+    compile "com.android.support:appcompat-v7:${project.supportLibVersion}"
+    compile "com.android.support:design:${project.supportLibVersion}"
+    compile "com.android.support:support-annotations:${project.supportLibVersion}"
     compile 'com.taobao.android:weex_inspector:0.10.0.5'
     compile 'com.journeyapps:zxing-android-embedded:3.4.0'
     // PLUGIN GRADLE EXTENSIONS START
