@@ -118,6 +118,7 @@ public class WXPageActivity extends AbsWeexActivity implements
     String url = getUrl(mUri);
     if (getSupportActionBar() != null) {
       getSupportActionBar().setTitle(url);
+      getSupportActionBar().hide();
     }
     loadUrl(url);
   }
